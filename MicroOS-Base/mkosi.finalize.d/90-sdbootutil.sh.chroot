@@ -30,7 +30,7 @@ cat <<EOF > /boot/efi/loader/entries/opensuse-microos-"$kernel_ver".conf
 title openSUSE MicroOS
 version 1@$kernel_ver
 sort-key opensuse-microos
-options quiet systemd.show_status=yes root=LABEL=root-x86-64 rootflags=subvol=@/.snapshots/1/snapshot
+options quiet systemd.show_status=yes root=LABEL=root-x86-64 rootflags=subvol=@/.snapshots/1/snapshot ecurity=selinux selinux=1
 linux /opensuse-microos/$kernel_ver/linux
 initrd /opensuse-microos/$kernel_ver/initrd
 EOF
