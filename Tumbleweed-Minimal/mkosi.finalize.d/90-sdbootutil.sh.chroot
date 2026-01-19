@@ -21,7 +21,7 @@ mkdir -p /boot/efi/{loader/entries,opensuse-tumbleweed/"$kernel_ver",EFI/BOOT,EF
 # cp /usr/lib/systemd/boot/efi/systemd-bootx64.efi /boot/efi/EFI/systemd/grub.efi
 cp /usr/lib/systemd/boot/efi/systemd-bootx64.efi /boot/efi/EFI/BOOT/BOOTX64.EFI
 cp /usr/lib/modules/"$kernel_ver"/vmlinuz /boot/efi/opensuse-tumbleweed/"$kernel_ver"/linux
-dracut --reproducible -N /boot/efi/opensuse-tumbleweed/"$kernel_ver"/initrd "$kernel_ver"
+dracut --reproducible --force --verbose -N /boot/efi/opensuse-tumbleweed/"$kernel_ver"/initrd "$kernel_ver"
 
 echo "timeout 5" > /boot/efi/loader/loader.conf
 echo "type1" > /boot/efi/loader/entries.srel
@@ -30,7 +30,7 @@ cat <<EOF > /boot/efi/loader/entries/opensuse-tumbleweed-"$kernel_ver".conf
 title openSUSE Tumbleweed
 version 1@$kernel_ver
 sort-key opensuse-tumbleweed
-options quiet systemd.show_status=yes
+options quiet systemd.show_status=yes security=selinux selinux=1
 linux /opensuse-tumbleweed/$kernel_ver/linux
 initrd /opensuse-tumbleweed/$kernel_ver/initrd
 EOF
