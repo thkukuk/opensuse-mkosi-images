@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 IMAGE="${IMAGE_ID}-${IMAGE_VERSION}.${ARCHITECTURE}"
 
 echo "mkosi.postoutput ${IMAGE}" "$@"
