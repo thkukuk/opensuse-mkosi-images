@@ -1,5 +1,7 @@
 #! /usr/bin/bash
 
+set -e
+
 # Add missing gpg keys to rpm database
 dumpsigs=/usr/lib/rpm/gnupg/dumpsigs
 
