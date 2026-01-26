@@ -1,0 +1,23 @@
+#! /usr/bin/bash
+
+# Add missing gpg keys to rpm database
+dumpsigs=/usr/lib/rpm/gnupg/dumpsigs
+
+if [ -x $dumpsigs ];then
+    $dumpsigs /usr/lib/rpm/gnupg/suse-build-key.gpg
+fi
+
+for KFN in /usr/lib/rpm/gnupg/keys/gpg-pubkey-*.asc; do
+    if [ ! -e "$KFN" ];then
+        #
+        # check if file exists because if the glob match did
+        # not find files bash will use the glob string as
+        # result and we just continue in this case
+        #
+        continue
+    fi
+    KEY=$(basename "$KFN" .asc)
+    rpm -q "$KEY" >/dev/null && continue
+    echo "Importing $KEY to rpm database"
+    rpm --import "$KFN"
+done

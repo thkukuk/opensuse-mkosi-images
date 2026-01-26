@@ -1,0 +1,18 @@
+#!/bin/bash
+
+set -e
+
+IMAGE="${IMAGE_ID}-${IMAGE_VERSION}.${ARCHITECTURE}"
+
+echo "mkosi.postoutput ${IMAGE}" "$@"
+
+# Create qcow2 images
+qemu-img convert -f raw -O qcow2 "${OUTPUTDIR}/${IMAGE}.raw" "${OUTPUTDIR}/${IMAGE}.qcow2"
+qemu-img resize "${OUTPUTDIR}/${IMAGE}.qcow2" 40G
+qemu-img info "${OUTPUTDIR}/${IMAGE}.qcow2"
+
+# we don't need the image symlink without extension
+rm -v "${OUTPUTDIR}/${IMAGE}"
+
+# we don't need the image.vmlinuz file
+rm -v "${OUTPUTDIR}/${IMAGE}.vmlinuz"

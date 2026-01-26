@@ -1,0 +1,4 @@
+enable jeos-firstboot.service
+enable NetworkManager.service
+enable sshd.service
+enable ca-certificates-setup.service

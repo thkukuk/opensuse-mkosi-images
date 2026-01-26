@@ -1,0 +1,6 @@
+#! /usr/bin/bash
+
+# Add repositories
+if [ -x /usr/sbin/add-yast-repos ]; then
+	/usr/sbin/add-yast-repos
+fi

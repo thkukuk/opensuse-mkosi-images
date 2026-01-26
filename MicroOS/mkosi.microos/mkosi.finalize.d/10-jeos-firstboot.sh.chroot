@@ -1,0 +1,7 @@
+#! /usr/bin/bash
+
+# Enable jeos-firstboot, disabled by combustion/ignition
+mkdir -p /var/lib/YaST2
+touch /var/lib/YaST2/reconfig_system
+systemctl mask systemd-firstboot
+systemctl enable jeos-firstboot.service

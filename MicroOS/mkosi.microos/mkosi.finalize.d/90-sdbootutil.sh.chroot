@@ -1,0 +1,36 @@
+#! /usr/bin/bash
+set -x
+
+echo "*** Setup bootloader ***"
+
+rmdir /efi
+
+#echo "Call sdbootutil install"
+#mkdir -p /boot/efi/{loader/entries,EFI/BOOT,EFI/systemd}
+#sdbootutil --esp-path=/boot/efi install
+#exit 0
+
+# All this should be done by `sdbootutil install`
+#shimdir="/usr/share/efi/x86_64"
+kernel_ver="$(basename /usr/lib/modules/*)"
+echo "Kernel version $kernel_ver"
+mkdir -p /boot/efi/{loader/entries,opensuse-microos/"$kernel_ver",EFI/BOOT,EFI/systemd}
+# cp "$shimdir"/MokManager.efi /boot/efi/EFI/BOOT/.
+# cp "$shimdir"/fallback.efi /boot/efi/EFI/BOOT/.
+# cp "$shimdir"/shim.efi /boot/efi/EFI/BOOT/BOOTX64.EFI
+# cp /usr/lib/systemd/boot/efi/systemd-bootx64.efi /boot/efi/EFI/systemd/grub.efi
+cp /usr/lib/systemd/boot/efi/systemd-bootx64.efi /boot/efi/EFI/BOOT/BOOTX64.EFI
+cp /usr/lib/modules/"$kernel_ver"/vmlinuz /boot/efi/opensuse-microos/"$kernel_ver"/linux
+dracut --reproducible --force --verbose -N /boot/efi/opensuse-microos/"$kernel_ver"/initrd "$kernel_ver"
+
+echo "timeout 5" > /boot/efi/loader/loader.conf
+echo "type1" > /boot/efi/loader/entries.srel
+cat <<EOF > /boot/efi/loader/entries/opensuse-microos-"$kernel_ver".conf
+# Boot Loader Specification type#1 entry
+title openSUSE MicroOS
+version 1@$kernel_ver
+sort-key opensuse-microos
+options quiet systemd.show_status=yes root=LABEL=root-x86-64 rootflags=subvol=@/.snapshots/1/snapshot security=selinux selinux=1
+linux /opensuse-microos/$kernel_ver/linux
+initrd /opensuse-microos/$kernel_ver/initrd
+EOF
