@@ -27,9 +27,10 @@ cp /usr/lib/systemd/boot/efi/systemd-bootx64.efi /boot/efi/EFI/BOOT/BOOTX64.EFI
 cp /usr/lib/modules/"$kernel_ver"/vmlinuz /boot/efi/opensuse-tumbleweed/"$kernel_ver"/linux
 dracut --reproducible --force --verbose -N /boot/efi/opensuse-tumbleweed/"$kernel_ver"/initrd "$kernel_ver"
 
+mkdir /etc/kernel
+echo "opensuse-tumbleweed" > /etc/kernel/entry-token
 echo "timeout 5" > /boot/efi/loader/loader.conf
 echo "type1" > /boot/efi/loader/entries.srel
-echo "opensuse-tumbleweed" > /etc/kernel/entry-token
 cat <<EOF > /boot/efi/loader/entries/opensuse-tumbleweed-"$kernel_ver".conf
 # Boot Loader Specification type#1 entry
 title openSUSE Tumbleweed
