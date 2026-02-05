@@ -13,7 +13,7 @@ if [ "${SUBIMAGE}" == "NoNewPrivs" ]; then
    SELINUX_PERMISSIVE="enforcing=0"
 fi
 if [ "${loader_token}" == "opensuse-microos" ]; then
-    ROOTFLAGS="root=LABEL=root-x86-64 rootflags=subvol=@/.snapshots/1/snapshot"
+    ROOTFLAGS="root=LABEL=root-$ARCHITECTURE rootflags=subvol=@/.snapshots/1/snapshot"
 fi
 
 #echo "Call sdbootutil install"
