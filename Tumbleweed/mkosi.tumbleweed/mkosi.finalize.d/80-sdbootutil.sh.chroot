@@ -29,6 +29,7 @@ dracut --reproducible --force --verbose -N /boot/efi/opensuse-tumbleweed/"$kerne
 
 echo "timeout 5" > /boot/efi/loader/loader.conf
 echo "type1" > /boot/efi/loader/entries.srel
+echo "opensuse-tumbleweed" > /etc/kernel/entry-token
 cat <<EOF > /boot/efi/loader/entries/opensuse-tumbleweed-"$kernel_ver".conf
 # Boot Loader Specification type#1 entry
 title openSUSE Tumbleweed

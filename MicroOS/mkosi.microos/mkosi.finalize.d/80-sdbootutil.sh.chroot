@@ -5,6 +5,10 @@ echo "*** Setup bootloader ***"
 
 rmdir /efi
 
+ls -alF /boot
+
+printenv
+
 if [ "${SUBIMAGE}" == "NoNewPrivs" ]; then
    SELINUX_PERMISSIVE="enforcing=0"
 fi
@@ -27,6 +31,7 @@ cp /usr/lib/systemd/boot/efi/systemd-bootx64.efi /boot/efi/EFI/BOOT/BOOTX64.EFI
 cp /usr/lib/modules/"$kernel_ver"/vmlinuz /boot/efi/opensuse-microos/"$kernel_ver"/linux
 dracut --reproducible --force --verbose -N /boot/efi/opensuse-microos/"$kernel_ver"/initrd "$kernel_ver"
 
+echo "opensuse-tumbleweed" > /etc/kernel/entry-token
 echo "timeout 5" > /boot/efi/loader/loader.conf
 echo "type1" > /boot/efi/loader/entries.srel
 cat <<EOF > /boot/efi/loader/entries/opensuse-microos-"$kernel_ver".conf
