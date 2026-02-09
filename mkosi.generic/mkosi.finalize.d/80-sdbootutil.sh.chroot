@@ -25,15 +25,15 @@ fi
 #exit 0
 
 # All this should be done by `sdbootutil install`
-#shimdir="/usr/share/efi/x86_64"
+shimdir="/usr/share/efi/x86_64"
 kernel_ver="$(basename /usr/lib/modules/*)"
 echo "Kernel version $kernel_ver"
 mkdir -p /boot/efi/{loader/entries,"$loader_token/$kernel_ver",EFI/BOOT,EFI/systemd}
-# cp "$shimdir"/MokManager.efi /boot/efi/EFI/BOOT/.
-# cp "$shimdir"/fallback.efi /boot/efi/EFI/BOOT/.
-# cp "$shimdir"/shim.efi /boot/efi/EFI/BOOT/BOOTX64.EFI
-# cp /usr/lib/systemd/boot/efi/systemd-bootx64.efi /boot/efi/EFI/systemd/grub.efi
-cp /usr/lib/systemd/boot/efi/systemd-bootx64.efi /boot/efi/EFI/BOOT/BOOTX64.EFI
+cp -p "$shimdir"/MokManager.efi /boot/efi/EFI/BOOT/.
+cp -p "$shimdir"/fallback.efi /boot/efi/EFI/BOOT/.
+cp -p "$shimdir"/shim.efi /boot/efi/EFI/BOOT/BOOTX64.EFI
+cp -p /usr/lib/systemd/boot/efi/systemd-bootx64.efi /boot/efi/EFI/systemd/grub.efi
+#cp /usr/lib/systemd/boot/efi/systemd-bootx64.efi /boot/efi/EFI/BOOT/BOOTX64.EFI
 cp /usr/lib/modules/"$kernel_ver"/vmlinuz /boot/efi/"$loader_token/$kernel_ver"/linux
 dracut --reproducible --force --verbose -N /boot/efi/"$loader_token/$kernel_ver"/initrd "$kernel_ver"
 
