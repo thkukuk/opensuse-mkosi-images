@@ -20,7 +20,7 @@ if [ "${loader_token}" == "opensuse-microos" ]; then
 fi
 
 #echo "Call sdbootutil install"
-#mkdir -p /boot/efi/{loader/entries,EFI/BOOT,EFI/systemd}
+#mkdir -p /boot/efi/{loader/entries,EFI/BOOT}
 #sdbootutil --esp-path=/boot/efi install
 #exit 0
 
@@ -28,11 +28,11 @@ fi
 shimdir="/usr/share/efi/x86_64"
 kernel_ver="$(basename /usr/lib/modules/*)"
 echo "Kernel version $kernel_ver"
-mkdir -p /boot/efi/{loader/entries,"$loader_token/$kernel_ver",EFI/BOOT,EFI/systemd}
+mkdir -p /boot/efi/{loader/entries,"$loader_token/$kernel_ver",EFI/BOOT}
 cp -p "$shimdir"/MokManager.efi /boot/efi/EFI/BOOT/.
 cp -p "$shimdir"/fallback.efi /boot/efi/EFI/BOOT/.
 cp -p "$shimdir"/shim.efi /boot/efi/EFI/BOOT/BOOTX64.EFI
-cp -p /usr/lib/systemd/boot/efi/systemd-bootx64.efi /boot/efi/EFI/systemd/grub.efi
+cp -p /usr/lib/systemd/boot/efi/systemd-bootx64.efi /boot/efi/EFI/BOOT/grub.efi
 #cp /usr/lib/systemd/boot/efi/systemd-bootx64.efi /boot/efi/EFI/BOOT/BOOTX64.EFI
 cp /usr/lib/modules/"$kernel_ver"/vmlinuz /boot/efi/"$loader_token/$kernel_ver"/linux
 dracut --reproducible --force --verbose -N /boot/efi/"$loader_token/$kernel_ver"/initrd "$kernel_ver"
