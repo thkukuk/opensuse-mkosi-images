@@ -28,11 +28,19 @@ fi
 shimdir="/usr/share/efi/x86_64"
 kernel_ver="$(basename /usr/lib/modules/*)"
 echo "Kernel version $kernel_ver"
-mkdir -p /boot/efi/{loader/entries,"$loader_token/$kernel_ver",EFI/BOOT}
+mkdir -p /boot/efi/{loader/entries,"$loader_token/$kernel_ver",EFI/BOOT,EFI/systemd}
 cp -p "$shimdir"/MokManager.efi /boot/efi/EFI/BOOT/.
+cp -p "$shimdir"/fallback.efi /boot/efi/EFI/BOOT/.
 cp -p "$shimdir"/shim.efi /boot/efi/EFI/BOOT/BOOTX64.EFI
-cp -p /usr/lib/systemd/boot/efi/systemd-bootx64.efi /boot/efi/EFI/BOOT/grub.efi
+cp -p /usr/lib/systemd/boot/efi/systemd-bootx64.efi /boot/efi/EFI/systemd/grub.efi
 #cp /usr/lib/systemd/boot/efi/systemd-bootx64.efi /boot/efi/EFI/BOOT/BOOTX64.EFI
+cp -p "$shimdir"/MokManager.efi /boot/efi/EFI/systemd/.
+cp -p "$shimdir"/shim.efi /boot/efi/EFI/systemd/.
+. /etc/os-release
+# Add a space if VERSION is non empty
+[ -z "$VERSION" ] || VERSION=" $VERSION"
+printf '\xFF\xFE' > /boot/efi/EFI/systemd/boot.csv
+echo "shim.efi,$NAME$VERSION" | iconv -f UTF-8 -t UCS-2LE >> /boot/efi/EFI/systemd/boot.csv
 cp /usr/lib/modules/"$kernel_ver"/vmlinuz /boot/efi/"$loader_token/$kernel_ver"/linux
 dracut --reproducible --force --verbose -N /boot/efi/"$loader_token/$kernel_ver"/initrd "$kernel_ver"
 
