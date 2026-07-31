@@ -1,7 +1,8 @@
 #! /usr/bin/bash
 set -x
+set -e
 
-loader_token=${IMAGE_ID%-$SUBIMAGE}
+loader_token=${IMAGE_ID%-"$SUBIMAGE"}
 title=${loader_token//-/ }
 loader_token=${loader_token,,}
 
@@ -36,6 +37,24 @@ else
     echo "SECURE_BOOT=\"${secure_boot}\"" >> /etc/sysconfig/bootloader
 fi
 
+# install u-boot and other files for Raspberry Pi
+if [ "$ARCHITECTURE" == "arm64" ] && [ -d /boot/vc ]; then
+    ESP_PATH="/boot/efi"
+    mkdir /boot/efi
+    # u-boot-rpiarm64
+    cp /boot/vc/ubootconfig.txt /boot/efi
+    cp /boot/vc/u-boot.bin /boot/efi/
+    # raspberrypi-firmware
+    for f in start.elf start4.elf fixup.dat fixup4.dat bootcode.bin; do
+	cp /boot/vc/$f /boot/efi/
+    done
+    # raspberrypi-firmware-config
+    cp /boot/vc/config.txt /boot/efi/config.txt
+    # raspberrypi-firmware-dt
+    cp -r /boot/vc/*dtb /boot/vc/overlays /boot/efi/
+fi
+
+# install bootloader with sdbootutil
 sdbootutil -v --no-random-seed --arch "$arch" \
 	   --esp-path "${ESP_PATH}" --entry-token=auto --no-variables \
 	   install
