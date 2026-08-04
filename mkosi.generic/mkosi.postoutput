@@ -6,12 +6,40 @@ IMAGE="${IMAGE_ID}-${IMAGE_VERSION}.${ARCHITECTURE}"
 
 echo "mkosi.postoutput ${IMAGE}" "$@"
 
-# Create qcow2 images, we need the uncompressed image
+# we need the uncompressed image
 xz --keep -d "${OUTPUTDIR}/${IMAGE}.raw.xz"
-qemu-img convert -f raw -O qcow2 "${OUTPUTDIR}/${IMAGE}.raw" "${OUTPUTDIR}/${IMAGE}.qcow2"
-qemu-img resize "${OUTPUTDIR}/${IMAGE}.qcow2" 40G
-qemu-img info "${OUTPUTDIR}/${IMAGE}.qcow2"
-rm "${OUTPUTDIR}/${IMAGE}.raw"
+
+if [[ "${IMAGE_ID}" == *RaspberryPi* ]]; then
+    # Create a Hybrid GPT for older Raspberry Pi
+    echo "Injecting hybrid MBR into $IMAGE..."
+    # Sequence meaning
+    # r     Enters the recovery and transformation menu.
+    # h     Selects the option to make a hybrid MBR.
+    # 1     Adds GPT Partition 1 (your ESP/FAT partition) to the MBR.
+    # N     Does Not place the EFI protective partition (0xEE) first. (The Pi firmware needs your FAT partition to appear first).
+    # 0c    Sets the legacy MBR hex code to 0c (W95 FAT32 LBA), which the Pi bootloader recognizes natively.
+    # Y     Sets the bootable flag on the partition (Yes).
+    # N     Answers No to the "Use unused partition space to protect more partitions?" prompt.
+    # w     Writes the new partition table to the image.
+    # Y     Confirms the write action (Yes).
+    gdisk "$IMAGE" <<EOF
+r
+h
+1
+N
+0c
+Y
+N
+w
+Y
+EOF
+else
+    # Create qcow2 images
+    qemu-img convert -f raw -O qcow2 "${OUTPUTDIR}/${IMAGE}.raw" "${OUTPUTDIR}/${IMAGE}.qcow2"
+    qemu-img resize "${OUTPUTDIR}/${IMAGE}.qcow2" 40G
+    qemu-img info "${OUTPUTDIR}/${IMAGE}.qcow2"
+    rm "${OUTPUTDIR}/${IMAGE}.raw"
+fi
 
 # we don't need the image symlink without extension
 rm -v "${OUTPUTDIR}/${IMAGE}"
