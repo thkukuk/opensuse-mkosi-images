@@ -6,10 +6,10 @@ IMAGE="${IMAGE_ID}-${IMAGE_VERSION}.${ARCHITECTURE}"
 
 echo "mkosi.postoutput ${IMAGE}" "$@"
 
-# we need the uncompressed image
-xz --keep -d "${OUTPUTDIR}/${IMAGE}.raw.xz"
 
 if [[ "${IMAGE_ID}" == *RaspberryPi* ]]; then
+    # uncompress the image
+    xz -d "${OUTPUTDIR}/${IMAGE}.raw.xz"
     # Create a Hybrid GPT for older Raspberry Pi
     echo "Injecting hybrid MBR into $IMAGE..."
     # Sequence meaning
@@ -33,7 +33,11 @@ N
 w
 Y
 EOF
+    # Compress again
+    xz -z "${OUTPUTDIR}/${IMAGE}.raw"
 else
+    # we need the uncompressed image
+    xz --keep -d "${OUTPUTDIR}/${IMAGE}.raw.xz"
     # Create qcow2 images
     qemu-img convert -f raw -O qcow2 "${OUTPUTDIR}/${IMAGE}.raw" "${OUTPUTDIR}/${IMAGE}.qcow2"
     qemu-img resize "${OUTPUTDIR}/${IMAGE}.qcow2" 40G
