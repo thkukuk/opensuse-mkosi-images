@@ -22,7 +22,7 @@ if [[ "${IMAGE_ID}" == *RaspberryPi* ]]; then
     # N     Answers No to the "Use unused partition space to protect more partitions?" prompt.
     # w     Writes the new partition table to the image.
     # Y     Confirms the write action (Yes).
-    gdisk "$IMAGE" <<EOF
+    gdisk "${OUTPUTDIR}/${IMAGE}.raw" <<EOF
 r
 h
 1
