@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -e
+
+# RemovePackages would also remove the firmware packages
+# installed by this meta RPMs, so we cannot use that
+rpm -e kernel-firmware-all patterns-images-hardware
