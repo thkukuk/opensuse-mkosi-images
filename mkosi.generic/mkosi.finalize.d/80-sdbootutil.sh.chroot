@@ -21,7 +21,7 @@ case "$ARCHITECTURE" in
     *) echo "Unknown arch $ARCHITECTURE"; exit 1 ;;
 esac
 
-mkdir /etc/kernel
+mkdir -p /etc/kernel
 echo "$loader_token" > /etc/kernel/entry-token
 echo "quiet systemd.show_status=yes console=ttyS0,115200 console=tty0 security=selinux selinux=1" > /etc/kernel/cmdline
 
