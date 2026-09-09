@@ -15,11 +15,14 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent
 DISTRIBUTIONS = ["MicroOS", "Tumbleweed"]
-ARCHITECTURES = ["x86-64", "arm64"]
+# No arm64 as this would pull in raspberry pi specific packages
+ARCHITECTURES = ["x86-64"]
+# Not part of any mkosi Packages= list, but required to get arch depending RPMs into OBS.
+EXTRA_PACKAGES = ["opensuse-mkosi-images-arch-deps"]
 
 
 def resolved_packages(dist_dir: Path) -> list[str]:
-    packages: set[str] = set()
+    packages: set[str] = set(EXTRA_PACKAGES)
     for arch in ARCHITECTURES:
         out = subprocess.run(
             ["mkosi", f"--architecture={arch}", "summary", "--json"],
