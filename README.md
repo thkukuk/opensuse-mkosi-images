@@ -25,7 +25,7 @@ Since `mkosi` requires some tools from `/usr/sbin`, the search path needs to be 
 PATH=$PATH:/usr/sbin mkosi -f
 ```
 
-This will build all images from the `<distribution>/mkosi.images` directory.
+This will build all images from the `<product>/mkosi.images` directory.
 
 ### OBS (Open Build Service)
 
@@ -33,3 +33,5 @@ There is a project which builds the images for openSUSE MicroOS and Tumbleweed:
 
 * Project: https://build.opensuse.org/project/show/home:kukuk:mkosi-images
 * Download: https://download.opensuse.org/repositories/home:/kukuk:/mkosi-images/mkosi/
+
+To build the images in OBS, the `<product>/mkosi.conf` file needs to be replaced with `<product>/obs/mkosi.conf`.
