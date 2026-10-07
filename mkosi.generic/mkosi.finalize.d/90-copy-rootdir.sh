@@ -4,6 +4,22 @@ set -e
 
 echo "*** Copy root dir for systemd-repart ***"
 
+# RemoveFiles= runs before the finalize scripts, so anything recreated
+# by earlier finalize scripts (e.g. sdbootutil/dracut writing to
+# /var/cache) is still present here. Cleanup as late as possible manual.
+rm -rf \
+	/buildroot/init \
+	/buildroot/var/adm \
+	/buildroot/var/cache \
+	/buildroot/var/crash \
+	/buildroot/var/lib/ca-certificates \
+	/buildroot/var/lib/zypp/AnonymousUniqueId \
+	/buildroot/var/lib/systemd/random-seed \
+	/buildroot/var/lock \
+	/buildroot/var/run \
+	/buildroot/var/spool \
+	/buildroot/var/opt
+
 mkdir /buildroot/.rootdir
 cp -al /buildroot/* /buildroot/.rootdir/
 mv -v /buildroot/.rootdir /buildroot/rootdir/
