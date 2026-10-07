@@ -14,7 +14,7 @@ rm -rf \
 	/buildroot/var/crash \
 	/buildroot/var/lock \
 	/buildroot/var/opt \
-	/buildroot/var/run \
+	/buildroot/var/run-XXX \
 	/buildroot/var/spool
 # Cleanup /var/lib
 # YaST2 and zypp need to stay, ca-certificates is a bug and should be removed
