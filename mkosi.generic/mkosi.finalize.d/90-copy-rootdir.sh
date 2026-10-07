@@ -12,13 +12,17 @@ rm -rf \
 	/buildroot/var/adm \
 	/buildroot/var/cache \
 	/buildroot/var/crash \
-	/buildroot/var/lib/ca-certificates \
-	/buildroot/var/lib/zypp/AnonymousUniqueId \
-	/buildroot/var/lib/systemd/random-seed \
 	/buildroot/var/lock \
+	/buildroot/var/opt \
 	/buildroot/var/run \
-	/buildroot/var/spool \
-	/buildroot/var/opt
+	/buildroot/var/spool
+# Cleanup /var/lib
+# YaST2 and zypp need to stay, ca-certificates is a bug and should be removed
+find /buildroot/var/lib -mindepth 1 -maxdepth 1 -type d \
+    ! -name "YaST2" \
+    ! -name "ca-certificates" \
+    ! -name "zypp" \
+    -exec rm -rf {} +
 
 mkdir /buildroot/.rootdir
 cp -al /buildroot/* /buildroot/.rootdir/
