@@ -22,6 +22,7 @@ find /buildroot/var/lib -mindepth 1 -maxdepth 1 -type d \
     ! -name "YaST2" \
     ! -name "ca-certificates" \
     ! -name "misc" \
+    ! -name "systemd" \
     ! -name "zypp" \
     -exec rm -rf {} +
 
