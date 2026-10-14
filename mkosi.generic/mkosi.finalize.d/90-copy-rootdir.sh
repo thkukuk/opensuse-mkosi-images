@@ -17,10 +17,11 @@ rm -rf \
 	/buildroot/var/run-XXX \
 	/buildroot/var/spool
 # Cleanup /var/lib
-# YaST2 and zypp need to stay, ca-certificates is a bug and should be removed
+# YaST2 and zypp need to stay, misc and ca-certificates are a bug and should be removed
 find /buildroot/var/lib -mindepth 1 -maxdepth 1 -type d \
     ! -name "YaST2" \
     ! -name "ca-certificates" \
+    ! -name "misc" \
     ! -name "zypp" \
     -exec rm -rf {} +
 
