@@ -4,6 +4,9 @@ set -e
 
 echo "*** Copy root dir for systemd-repart ***"
 
+VERSION_ID=$(source /buildroot/etc/os-release && echo "$VERSION_ID")
+echo "VERSION_ID=$VERSION_ID" > version_id.txt
+
 # RemoveFiles= runs before the finalize scripts, so anything recreated
 # by earlier finalize scripts (e.g. sdbootutil/dracut writing to
 # /var/cache) is still present here. Cleanup as late as possible manual.

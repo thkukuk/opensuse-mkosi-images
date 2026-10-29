@@ -2,10 +2,17 @@
 
 set -e
 
-IMAGE="${IMAGE_ID}-${IMAGE_VERSION}.${ARCHITECTURE}"
+MKOSI_IMAGE="${IMAGE_ID}-${IMAGE_VERSION}.${ARCHITECTURE}"
 
-echo "mkosi.postoutput ${IMAGE}" "$@"
+echo "mkosi.postoutput ${MKOSI_IMAGE}" "$@"
 
+VERSION_ID=$(source version_id.txt && echo "$VERSION_ID")
+rm -f version_id.txt
+
+IMAGE="${IMAGE_ID}-${VERSION_ID}-${IMAGE_VERSION}.${ARCHITECTURE}"
+
+mv -v "${OUTPUTDIR}/${MKOSI_IMAGE}.raw.xz" "${OUTPUTDIR}/${IMAGE}.raw.xz"
+mv -v "${OUTPUTDIR}/${MKOSI_IMAGE}.manifest" "${OUTPUTDIR}/${IMAGE}.manifest"
 
 if [[ "${IMAGE_ID}" == *RaspberryPi* ]]; then
     # uncompress the image
@@ -46,7 +53,7 @@ else
 fi
 
 # we don't need the image symlink without extension
-rm -v "${OUTPUTDIR}/${IMAGE}"
+rm -v "${OUTPUTDIR}/${MKOSI_IMAGE}"
 
 # we don't need the image.vmlinuz file
-rm -v "${OUTPUTDIR}/${IMAGE}.vmlinuz"
+rm -v "${OUTPUTDIR}/${MKOSI_IMAGE}.vmlinuz"
